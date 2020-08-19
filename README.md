@@ -1,5 +1,6 @@
 ﻿﻿## How to use
-      private readonly SerialCom serialCom;
+
+        private readonly SerialCom serialCom;
 
         /// <summary>
         /// Initializes the baudrate list and serial port
