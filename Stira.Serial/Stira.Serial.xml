@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Stira.Serial</name>
+    </assembly>
+    <members>
+        <member name="T:Stira.Serial.SerialCom">
+            <summary>
+            Simple Serial communication class with some additional functionality like DataReady on
+            behalf of PacketHeader and Endbyte indetifier
+            </summary>
+        </member>
+        <member name="M:Stira.Serial.SerialCom.#ctor">
+            <summary>
+            Initializes the baudrate list and serial port
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.StartByteIdentifier">
+            <summary>
+            If not null, this array will be used to identify the Rx Packet starting message
+            <para>
+            Note: StartByteIdentifier and EndByteIdentifier both must be set if you want to identify
+            packet by Start/End
+            </para>
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.EndByteIdentifier">
+            <summary>
+            If not null, this array will be used to identify the Rx packet message completion
+            <para>
+            Note: StartByteIdentifier and EndByteIdentifier both must be set if you want to identify
+            packet by Start/End
+            </para>
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.LastError">
+            <summary>
+            It logs last error
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.IsPortOpen">
+            <summary>
+            Current
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.ListOfAvailablePorts">
+            <summary>
+            List of availabe serial ports open
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.ListOfBaudRates">
+            <summary>
+            List of baud rates available
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.BaudRate">
+            <summary>
+            Selected baud rate
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.PortName">
+            <summary>
+            Serial Port name
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.DataReady">
+            <summary>
+            This event will be called when data is ready
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.BytesThresholdForRxPush">
+            <summary>
+            Whenever there's data on Rx, it will wait for this much bytes then fire the DataReadyEvent
+            </summary>
+        </member>
+        <member name="M:Stira.Serial.SerialCom.GetSerialPort">
+            <summary>
+            If for any reason we need to change any parameter you can change it using SerialPort object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Stira.Serial.SerialCom.Write(System.Byte[])">
+            <summary>
+            Writes the byte to serial port if open
+            </summary>
+            <param name="bytesToWrite">bytes to write</param>
+            <returns></returns>
+        </member>
+        <member name="M:Stira.Serial.SerialCom.Open">
+            <summary>
+            Tries to open the serial port
+            </summary>
+            <returns>Current Port status</returns>
+        </member>
+        <member name="M:Stira.Serial.SerialCom.Open(System.String,System.Int32)">
+            <summary>
+            Sets the Port and Baudrate then opens the port
+            </summary>
+            <param name="portName"></param>
+            <param name="baudRate"></param>
+            <returns>Port open state</returns>
+        </member>
+        <member name="M:Stira.Serial.SerialCom.Close">
+            <summary>
+            Closes the port if open
+            </summary>
+            <returns>Current Port Status</returns>
+        </member>
+        <member name="M:Stira.Serial.SerialCom.SetStartPacketID(System.Byte[])">
+            <summary>
+            Sets StartByteIdentifier
+            </summary>
+            <param name="startByteId"></param>
+        </member>
+        <member name="M:Stira.Serial.SerialCom.SetEndPacketID(System.Byte[])">
+            <summary>
+            Sets EndByteIdentifier
+            </summary>
+            <param name="endByteId"></param>
+        </member>
+    </members>
+</doc>

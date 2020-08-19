@@ -4,6 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/Touseefelahi/Stira.Serial</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Touseefelahi/Stira.Serial</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>Serial, EasySerial</PackageTags>
+    <Description>This is simple implementation of Serial Protocol with some features like Start Header and End Header.</Description>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Touseef</Authors>
+    <Company>Stira</Company>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
