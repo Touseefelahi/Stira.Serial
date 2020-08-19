@@ -1,4 +1,4 @@
-﻿## How to use
+﻿﻿## How to use
       private readonly SerialCom serialCom;
 
         /// <summary>
@@ -24,4 +24,3 @@
         {
             return serialCom.Write(value);
         }
-       
