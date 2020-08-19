@@ -4,6 +4,10 @@ using System.IO.Ports;
 
 namespace Stira.Serial
 {
+    /// <summary>
+    /// Simple Serial communication class with some additional functionality like DataReady on
+    /// behalf of PacketHeader and Endbyte indetifier
+    /// </summary>
     public class SerialCom
     {
         private readonly List<byte> rxBuffer;
@@ -21,7 +25,7 @@ namespace Stira.Serial
             };
             rxBuffer = new List<byte>();
             ListOfBaudRates = new List<int> { 110, 300, 600, 1200, 2400, 4800, 9600, 14400,
-                19200, 38400, 57600, 115200, 230400, 128000, 256000 };
+                19200, 38400, 57600, 115200, 128000, 256000 };
         }
 
         /// <summary>
@@ -72,12 +76,24 @@ namespace Stira.Serial
         /// </summary>
         public string PortName { get; set; } = "COM1";
 
+        /// <summary>
+        /// This event will be called when data is ready
+        /// </summary>
         public EventHandler<byte[]> DataReady { get; set; }
 
         /// <summary>
         /// Whenever there's data on Rx, it will wait for this much bytes then fire the DataReadyEvent
         /// </summary>
         public int BytesThresholdForRxPush { get; set; }
+
+        /// <summary>
+        /// If for any reason we need to change any parameter you can change it using SerialPort object
+        /// </summary>
+        /// <returns></returns>
+        public SerialPort GetSerialPort()
+        {
+            return serialPort;
+        }
 
         /// <summary>
         /// Writes the byte to serial port if open
