@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stira.Serial", "Stira.Serial.csproj", "{72167035-825F-4AB8-8728-A2119E17DC9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stira.Serial\Stira.Serial", "Stira.Serial\Stira.Serial.csproj", "{72167035-825F-4AB8-8728-A2119E17DC9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
