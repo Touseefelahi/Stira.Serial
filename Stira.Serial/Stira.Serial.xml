@@ -18,10 +18,6 @@
         <member name="P:Stira.Serial.SerialCom.StartByteIdentifier">
             <summary>
             If not null, this array will be used to identify the Rx Packet starting message
-            <para>
-            Note: StartByteIdentifier and EndByteIdentifier both must be set if you want to identify
-            packet by Start/End
-            </para>
             </summary>
         </member>
         <member name="P:Stira.Serial.SerialCom.EndByteIdentifier">
@@ -31,6 +27,25 @@
             Note: StartByteIdentifier and EndByteIdentifier both must be set if you want to identify
             packet by Start/End
             </para>
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.PayloadIndex">
+            <summary>
+            Payload index in Rx Packet to determine packet end. If its 0 Software will use <see
+            cref="P:Stira.Serial.SerialCom.BytesThresholdForRxPush"/> as length
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.TwoBytesForPayload">
+            <summary>
+            No of bytes to read for Payload e.g. IF protocol have 2 bytes for payload then set this
+            to true.
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.SerialCom.PayloadOffset">
+            <summary>
+            Payload offset: if protocol payload excludes some bytes from the reply. Include them
+            here. Some protocols doesn't include Header/CRC/Endbyte etc
+            <para>e.g. If reply protocol excludes 3 bytes then set this to 3</para>
             </summary>
         </member>
         <member name="P:Stira.Serial.SerialCom.LastError">

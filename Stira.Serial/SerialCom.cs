@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 
 namespace Stira.Serial
 {
@@ -13,6 +14,8 @@ namespace Stira.Serial
         private readonly List<byte> rxBuffer;
         private SerialPort serialPort;
         private bool isStartPacketFound;
+
+        private int packetSize;
 
         /// <summary>
         /// Initializes the baudrate list and serial port
@@ -30,10 +33,6 @@ namespace Stira.Serial
 
         /// <summary>
         /// If not null, this array will be used to identify the Rx Packet starting message
-        /// <para>
-        /// Note: StartByteIdentifier and EndByteIdentifier both must be set if you want to identify
-        /// packet by Start/End
-        /// </para>
         /// </summary>
         public List<byte> StartByteIdentifier { get; private set; }
 
@@ -45,6 +44,25 @@ namespace Stira.Serial
         /// </para>
         /// </summary>
         public List<byte> EndByteIdentifier { get; private set; }
+
+        /// <summary>
+        /// Payload index in Rx Packet to determine packet end. If its 0 Software will use <see
+        /// cref="BytesThresholdForRxPush"/> as length
+        /// </summary>
+        public int PayloadIndex { get; set; }
+
+        /// <summary>
+        /// No of bytes to read for Payload e.g. IF protocol have 2 bytes for payload then set this
+        /// to true.
+        /// </summary>
+        public bool TwoBytesForPayload { get; set; }
+
+        /// <summary>
+        /// Payload offset: if protocol payload excludes some bytes from the reply. Include them
+        /// here. Some protocols doesn't include Header/CRC/Endbyte etc
+        /// <para>e.g. If reply protocol excludes 3 bytes then set this to 3</para>
+        /// </summary>
+        public int PayloadOffset { get; set; }
 
         /// <summary>
         /// It logs last error
@@ -201,6 +219,30 @@ namespace Stira.Serial
             EndByteIdentifier = new List<byte>(endByteId);
         }
 
+        private byte[] RemoveAt(byte[] array, int startIndex, int length)
+        {
+            if (array == null)
+                throw new ArgumentNullException("array");
+
+            if (length < 0)
+            {
+                startIndex += 1 + length;
+                length = -length;
+            }
+
+            if (startIndex < 0)
+                throw new ArgumentOutOfRangeException("startIndex");
+            if (startIndex + length > array.Length)
+                throw new ArgumentOutOfRangeException("length");
+
+            byte[] newArray = new byte[array.Length - length];
+
+            Array.Copy(array, 0, newArray, 0, startIndex);
+            Array.Copy(array, startIndex + length, newArray, startIndex, array.Length - startIndex - length);
+
+            return newArray;
+        }
+
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             int availableBytes = serialPort.BytesToRead;
@@ -232,6 +274,46 @@ namespace Stira.Serial
                             rxBuffer.Clear();
                         }
                     }
+                }
+                else if (StartByteIdentifier != null)
+                {
+                    do
+                    {
+                        if (PayloadIndex == 0) packetSize = BytesThresholdForRxPush;
+                        if (isStartPacketFound)
+                        {
+                            rxBuffer.AddRange(tempBuffer); //Mergin remaining bytes
+                            if (rxBuffer.Count >= packetSize)
+                            {
+                                DataReady?.Invoke(null, rxBuffer.ToArray());
+                                rxBuffer.Clear();
+                                isStartPacketFound = false;
+                            }
+                        }
+                        int foundAt = SearchPattern(tempBuffer, StartByteIdentifier);
+                        if (foundAt != -1)
+                        {
+                            if (PayloadIndex != 0 && tempBuffer.Length >= foundAt + PayloadIndex + 2)
+                            {
+                                if (TwoBytesForPayload)
+                                    packetSize = BitConverter.ToUInt16(tempBuffer, foundAt + PayloadIndex);
+                                else packetSize = tempBuffer[PayloadIndex];
+                            }
+                            if (tempBuffer.Length >= foundAt + packetSize)
+                            {
+                                rxBuffer.AddRange(tempBuffer.Skip(foundAt).Take(packetSize));
+                                DataReady?.Invoke(null, rxBuffer.ToArray());
+                                rxBuffer.Clear();
+                                tempBuffer = RemoveAt(tempBuffer, 0, foundAt + packetSize);
+                                isStartPacketFound = false;
+                            }
+                            else
+                            {
+                                isStartPacketFound = true;
+                                rxBuffer.AddRange(tempBuffer.Skip(foundAt).Take(tempBuffer.Length - foundAt));
+                            }
+                        }
+                    } while (rxBuffer.Count >= packetSize);
                 }
                 else
                 {
