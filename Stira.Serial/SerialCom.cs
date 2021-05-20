@@ -7,9 +7,9 @@ namespace Stira.Serial
 {
     /// <summary>
     /// Simple Serial communication class with some additional functionality like DataReady on
-    /// behalf of PacketHeader and Endbyte indetifier
+    /// behalf of PacketHeader and Endbyte identifier
     /// </summary>
-    public class SerialCom
+    public class SerialCom : ISerialCom
     {
         private readonly List<byte> rxBuffer;
         private SerialPort serialPort;
@@ -18,7 +18,7 @@ namespace Stira.Serial
         private int packetSize;
 
         /// <summary>
-        /// Initializes the baudrate list and serial port
+        /// Initializes the baud rate list and serial port
         /// </summary>
         public SerialCom()
         {
@@ -29,6 +29,10 @@ namespace Stira.Serial
             rxBuffer = new List<byte>();
             ListOfBaudRates = new List<int> { 110, 300, 600, 1200, 2400, 4800, 9600, 14400,
                 19200, 38400, 57600, 115200, 128000, 256000 };
+            if (ListOfAvailablePorts.Count > 0)
+            {
+                PortName = ListOfAvailablePorts[0];
+            }
         }
 
         /// <summary>
@@ -75,9 +79,9 @@ namespace Stira.Serial
         public bool IsPortOpen => serialPort.IsOpen;
 
         /// <summary>
-        /// List of availabe serial ports open
+        /// List of available serial ports open
         /// </summary>
-        public List<string> ListOfAvailablePorts => new List<string>(SerialPort.GetPortNames());
+        public List<string> ListOfAvailablePorts => new(SerialPort.GetPortNames());
 
         /// <summary>
         /// List of baud rates available
@@ -92,7 +96,7 @@ namespace Stira.Serial
         /// <summary>
         /// Serial Port name
         /// </summary>
-        public string PortName { get; set; } = "COM1";
+        public string PortName { get; set; }
 
         /// <summary>
         /// This event will be called when data is ready
@@ -171,7 +175,7 @@ namespace Stira.Serial
         }
 
         /// <summary>
-        /// Sets the Port and Baudrate then opens the port
+        /// Sets the Port and Baud rate then opens the port
         /// </summary>
         /// <param name="portName"></param>
         /// <param name="baudRate"></param>
@@ -282,7 +286,7 @@ namespace Stira.Serial
                         if (PayloadIndex == 0) packetSize = BytesThresholdForRxPush;
                         if (isStartPacketFound)
                         {
-                            rxBuffer.AddRange(tempBuffer); //Mergin remaining bytes
+                            rxBuffer.AddRange(tempBuffer); //Merging remaining bytes
                             if (rxBuffer.Count >= packetSize)
                             {
                                 DataReady?.Invoke(null, rxBuffer.ToArray());
