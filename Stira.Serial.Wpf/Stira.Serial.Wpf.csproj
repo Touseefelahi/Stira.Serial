@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Stira.Converters.Wpf" Version="1.0.3" />
+    <PackageReference Include="Stira.Serial" Version="1.1.0" />
+    <PackageReference Include="Stira.WpfCore" Version="1.1.0" />
+  </ItemGroup>
+</Project>

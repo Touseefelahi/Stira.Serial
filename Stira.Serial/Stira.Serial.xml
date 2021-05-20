@@ -4,15 +4,139 @@
         <name>Stira.Serial</name>
     </assembly>
     <members>
+        <member name="T:Stira.Serial.ISerialCom">
+            <summary>
+            Simple Serial communication class with some additional functionality like DataReady on
+            behalf of PacketHeader and Endbyte identifier
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.StartByteIdentifier">
+            <summary>
+            If not null, this array will be used to identify the Rx Packet starting message
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.EndByteIdentifier">
+            <summary>
+            If not null, this array will be used to identify the Rx packet message completion
+            <para>
+            Note: StartByteIdentifier and EndByteIdentifier both must be set if you want to identify
+            packet by Start/End
+            </para>
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.PayloadIndex">
+            <summary>
+            Payload index in Rx Packet to determine packet end. If its 0 Software will use <see
+            cref="P:Stira.Serial.ISerialCom.BytesThresholdForRxPush"/> as length
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.TwoBytesForPayload">
+            <summary>
+            No of bytes to read for Payload e.g. IF protocol have 2 bytes for payload then set this
+            to true.
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.PayloadOffset">
+            <summary>
+            Payload offset: if protocol payload excludes some bytes from the reply. Include them
+            here. Some protocols doesn't include Header/CRC/Endbyte etc
+            <para>e.g. If reply protocol excludes 3 bytes then set this to 3</para>
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.LastError">
+            <summary>
+            It logs last error
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.IsPortOpen">
+            <summary>
+            Current
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.ListOfAvailablePorts">
+            <summary>
+            List of available serial ports open
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.ListOfBaudRates">
+            <summary>
+            List of baud rates available
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.BaudRate">
+            <summary>
+            Selected baud rate
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.PortName">
+            <summary>
+            Serial Port name
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.DataReady">
+            <summary>
+            This event will be called when data is ready
+            </summary>
+        </member>
+        <member name="P:Stira.Serial.ISerialCom.BytesThresholdForRxPush">
+            <summary>
+            Whenever there's data on Rx, it will wait for this much bytes then fire the DataReadyEvent
+            </summary>
+        </member>
+        <member name="M:Stira.Serial.ISerialCom.GetSerialPort">
+            <summary>
+            If for any reason we need to change any parameter you can change it using SerialPort object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Stira.Serial.ISerialCom.Write(System.Byte[])">
+            <summary>
+            Writes the byte to serial port if open
+            </summary>
+            <param name="bytesToWrite">bytes to write</param>
+            <returns></returns>
+        </member>
+        <member name="M:Stira.Serial.ISerialCom.Open">
+            <summary>
+            Tries to open the serial port
+            </summary>
+            <returns>Current Port status</returns>
+        </member>
+        <member name="M:Stira.Serial.ISerialCom.Open(System.String,System.Int32)">
+            <summary>
+            Sets the Port and Baud rate then opens the port
+            </summary>
+            <param name="portName"></param>
+            <param name="baudRate"></param>
+            <returns>Port open state</returns>
+        </member>
+        <member name="M:Stira.Serial.ISerialCom.Close">
+            <summary>
+            Closes the port if open
+            </summary>
+            <returns>Current Port Status</returns>
+        </member>
+        <member name="M:Stira.Serial.ISerialCom.SetStartPacketID(System.Byte[])">
+            <summary>
+            Sets StartByteIdentifier
+            </summary>
+            <param name="startByteId"></param>
+        </member>
+        <member name="M:Stira.Serial.ISerialCom.SetEndPacketID(System.Byte[])">
+            <summary>
+            Sets EndByteIdentifier
+            </summary>
+            <param name="endByteId"></param>
+        </member>
         <member name="T:Stira.Serial.SerialCom">
             <summary>
             Simple Serial communication class with some additional functionality like DataReady on
-            behalf of PacketHeader and Endbyte indetifier
+            behalf of PacketHeader and Endbyte identifier
             </summary>
         </member>
         <member name="M:Stira.Serial.SerialCom.#ctor">
             <summary>
-            Initializes the baudrate list and serial port
+            Initializes the baud rate list and serial port
             </summary>
         </member>
         <member name="P:Stira.Serial.SerialCom.StartByteIdentifier">
@@ -60,7 +184,7 @@
         </member>
         <member name="P:Stira.Serial.SerialCom.ListOfAvailablePorts">
             <summary>
-            List of availabe serial ports open
+            List of available serial ports open
             </summary>
         </member>
         <member name="P:Stira.Serial.SerialCom.ListOfBaudRates">
@@ -109,7 +233,7 @@
         </member>
         <member name="M:Stira.Serial.SerialCom.Open(System.String,System.Int32)">
             <summary>
-            Sets the Port and Baudrate then opens the port
+            Sets the Port and Baud rate then opens the port
             </summary>
             <param name="portName"></param>
             <param name="baudRate"></param>
